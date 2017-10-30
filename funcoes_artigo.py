@@ -53,3 +53,26 @@ def constroi_solucao_alocacao(dados, distancias, medianas):
 				break
 	# retorna a matriz de alocação
 	return np.array(x)
+
+
+def verifica_consistencia(dados, alocacoes, medianas):
+	"Verifica se os dados estao consistentes com as restricoes"
+	# algum ponto foi não foi alocado ou utiliza mais de uma mediana
+	pontos_usados = np.sum(alocacoes, axis = 1)
+	for ponto in range(len(dados)):
+		if pontos_usados[ponto] != 1 and ponto not in medianas:
+			return False
+
+	# algum ponto que não é uma mediana foi utilizado como tal
+	pontos_alocados = np.sum(alocacoes, axis = 0)
+	for ponto in range(len(dados)):
+		if pontos_alocados[ponto] > 0 and ponto not in medianas:
+			return False
+
+	# a demanda em uma mediana não é maior do que sua capacidade
+	demanda = dados[:, 3].T
+	capacidade = dados[:, 2].T
+	demanda_medianas = demanda.dot(alocacoes)
+	if (demanda_medianas <= capacidade).any() == False:
+		return False
+	return True

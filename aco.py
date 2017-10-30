@@ -3,6 +3,7 @@ from leitura_dados import pega_informacoes_pontos
 from leitura_dados import pega_distancia_pontos
 from leitura_dados import pega_pontos_e_medianas
 from funcoes_artigo import constroi_solucao_alocacao
+from funcoes_artigo import verifica_consistencia
 import copy
 import numpy as np
 
@@ -15,7 +16,6 @@ distancias = np.array(pega_distancia_pontos(dados))
 # valores iniciais de feromônios
 feromonios = np.array([0 for ponto in range(n_pontos)])
 
-resultado = np.asmatrix(constroi_solucao_alocacao(dados, distancias, [0, 10, 22, 34, 45, 78, 45, 12, 77]))
-
-for linha in resultado:
-	print(linha)
+# testa o funcionamento da heurística
+resultado = constroi_solucao_alocacao(dados, distancias, [0, 10, 20, 21, 22, 23, 24, 25])
+print(verifica_consistencia(dados, resultado, [0, 10, 20, 21, 22, 23, 24, 25]))
