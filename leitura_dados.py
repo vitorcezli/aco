@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import math
+import numpy as np
 
 
 def pega_pontos_e_medianas(file):
@@ -19,7 +20,7 @@ def pega_informacoes_pontos(file):
 	# remove a última linha se ela for vazia e retorna a matriz
 	if len(matriz[len(matriz) - 1]) != 4:
 		matriz = matriz[: len(matriz) - 1]
-	return matriz
+	return np.array(matriz)
 
 
 def pega_distancia_pontos(matriz):
@@ -35,4 +36,4 @@ def pega_distancia_pontos(matriz):
 				(matriz[i][0] - matriz[j][0]) ** 2 +
 				(matriz[i][1] - matriz[j][1]) ** 2
 			)
-	return distancia
+	return np.array(distancia)

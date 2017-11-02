@@ -1,21 +1,23 @@
 #!/usr/bin/python3
-from leitura_dados import pega_informacoes_pontos
-from leitura_dados import pega_distancia_pontos
-from leitura_dados import pega_pontos_e_medianas
-from funcoes_artigo import constroi_solucao_alocacao
-from funcoes_artigo import verifica_consistencia
-import copy
-import numpy as np
+import leitura_dados
+import funcoes_artigo
 
 
 # pega as informações iniciais do arquivo que será utilizado
-n_pontos, n_medianas = pega_pontos_e_medianas('SJC1.dat')
-dados = np.array(pega_informacoes_pontos('SJC1.dat'))
-distancias = np.array(pega_distancia_pontos(dados))
+n_pontos, n_medianas = leitura_dados.pega_pontos_e_medianas('SJC1.dat')
+dados = leitura_dados.pega_informacoes_pontos('SJC1.dat')
+distancias = leitura_dados.pega_distancia_pontos(dados)
 
 # valores iniciais de feromônios
-feromonios = np.array([0 for ponto in range(n_pontos)])
+feromonios = funcoes_artigo.feromonios_iniciais(n_pontos, 0.5)
+print(funcoes_artigo.escolhe_pontos_por_valores(feromonios, 10))
 
 # testa o funcionamento da heurística
-resultado = constroi_solucao_alocacao(dados, distancias, [0, 10, 20, 21, 22, 23, 24, 25])
-print(verifica_consistencia(dados, resultado, [0, 10, 20, 21, 22, 23, 24, 25]))
+resultado = funcoes_artigo.constroi_solucao_alocacao(dados, distancias, [0, 10, 20, 21, 22, 23, 24, 25])
+print(funcoes_artigo.verifica_consistencia(dados, resultado, [0, 10, 20, 21, 22, 23, 24, 25]))
+
+
+
+
+# teste
+print(funcoes_artigo.calcula_distancia_total(distancias, resultado))

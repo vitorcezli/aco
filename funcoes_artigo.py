@@ -1,5 +1,6 @@
 import copy
 import numpy as np
+import random
 
 
 def __coluna_matriz(matriz, coluna):
@@ -76,3 +77,49 @@ def verifica_consistencia(dados, alocacoes, medianas):
 	if (demanda_medianas <= capacidade).any() == False:
 		return False
 	return True
+
+
+def calcula_distancia_total(distancias, alocacoes):
+	"Calcula a distancia dos pontos as suas medianas"
+	return np.sum(distancias * alocacoes)
+
+
+def feromonios_iniciais(quantidade_pontos, valor_inicial):
+	"Retorna a quantidade inicial de feromonios"
+	return np.array([valor_inicial for ponto in range(quantidade_pontos)])
+
+
+def __transforme_valor_probabilidade(valores):
+	"Retorna a probabilidade de cada valor"
+	return valores / np.sum(valores)
+
+
+def __seleciona_indice(probabilidades):
+	"Seleciona um indice a partir das probabilidades"
+	aleatorio = random.random()
+	indice = 0
+	# calcula o índice e o retorna
+	while aleatorio - probabilidades[indice] > 0:
+		aleatorio -= probabilidades[indice]
+		indice += 1
+	return indice
+
+
+def escolhe_pontos_por_valores(feromonios, quantidade_medianas):
+	"Escolhe a quantidade indicada de pontos a partir de seus valores"
+	lista_pontos = []
+	prob = feromonios
+
+	prob = __transforme_valor_probabilidade(prob)
+	lista_indice_prob = list(range(len(feromonios)))
+
+	# seleciona uma mediana a cada iteração a partir dos feromônios
+	while len(lista_pontos) < quantidade_medianas:
+		indice = __seleciona_indice(prob)
+		lista_pontos.append(lista_indice_prob[indice])
+		del lista_indice_prob[indice]
+		prob = np.delete(prob, indice)
+		prob = __transforme_valor_probabilidade(prob)
+
+	# retorna a lista com as medianas selecionadas
+	return lista_pontos
