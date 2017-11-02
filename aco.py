@@ -3,6 +3,8 @@ import leitura_dados
 import funcoes_artigo
 import math
 import sys
+import numpy as np
+import graficos
 
 
 # pega os valores dos parâmetros
@@ -21,6 +23,9 @@ feromonios = funcoes_artigo.feromonios_iniciais(n_pontos, 0.5)
 # armazena as melhores medianas
 melhores_medianas = None
 menor_distancia = math.inf
+
+# variáveis a serem utilizados nos gráficos
+distancia_lista = []
 
 # executa aco
 for iteracao in range(quantidade_iteracoes):
@@ -50,13 +55,18 @@ for iteracao in range(quantidade_iteracoes):
 			melhores_medianas = medianas
 		if distancia > pior_distancia_local:
 			pior_distancia_local = distancia
+	# valores mínimos e máximos para os feromônios
+	min_v = 0.001
+	max_v = 0.999
 	# atualiza feromônios
 	funcoes_artigo.atualiza_feromonios(feromonios, taxa,
 		melhores_medianas_locais, melhores_medianas,
-		menor_distancia_local, menor_distancia, pior_distancia_local)
-	print(iteracao + 1, menor_distancia, feromonios)
-
+		menor_distancia_local, menor_distancia, pior_distancia_local,
+		max_v, min_v)
+	# caso haja convergência, termina o programa após imprimir os dados
+	if funcoes_artigo.convergencia(feromonios, max_v, min_v):
+		break
+	distancia_lista.append(menor_distancia)
 
 # imprime a melhor distância e as melhores medianas encontradas
-print('Distancia:', menor_distancia)
-print('Medianas:', melhores_medianas)
+print(menor_distancia, melhores_medianas)

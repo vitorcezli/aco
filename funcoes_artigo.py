@@ -126,7 +126,7 @@ def escolhe_pontos_por_valores(feromonios, quantidade_medianas):
 
 
 def atualiza_feromonios(feromonios, taxa, m_local, m_global, 
-	d_local, d_global, p_local):
+	d_local, d_global, p_local, max_v, min_v):
 	"Atualiza os feromonios em cada ponto"
 	delta = 1 - (d_local - d_global) / (p_local - d_global)
 	for i in range(len(feromonios)):
@@ -134,3 +134,16 @@ def atualiza_feromonios(feromonios, taxa, m_local, m_global,
 			feromonios[i] += taxa * (delta - feromonios[i])
 		else:
 			feromonios[i] -= taxa * feromonios[i]
+		# controla o máximo e o mínimo dos feromônios
+		if feromonios[i] > max_v:
+			feromonios[i] = max_v
+		elif feromonios[i] < min_v:
+			feromonios[i] = min_v
+
+
+def convergencia(feromonios, max_v, min_v):
+	"Retorna se houve convergencia nos feromonios"
+	for valor in feromonios:
+		if valor != max_v and valor != min_v:
+			return False
+	return True
