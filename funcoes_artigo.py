@@ -1,3 +1,4 @@
+from __future__ import division
 import copy
 import numpy as np
 import random
@@ -107,10 +108,9 @@ def __seleciona_indice(probabilidades):
 
 def escolhe_pontos_por_valores(feromonios, quantidade_medianas):
 	"Escolhe a quantidade indicada de pontos a partir de seus valores"
+	# valores iniciais
 	lista_pontos = []
-	prob = feromonios
-
-	prob = __transforme_valor_probabilidade(prob)
+	prob = __transforme_valor_probabilidade(feromonios)
 	lista_indice_prob = list(range(len(feromonios)))
 
 	# seleciona uma mediana a cada iteração a partir dos feromônios
@@ -123,3 +123,14 @@ def escolhe_pontos_por_valores(feromonios, quantidade_medianas):
 
 	# retorna a lista com as medianas selecionadas
 	return lista_pontos
+
+
+def atualiza_feromonios(feromonios, taxa, m_local, m_global, 
+	d_local, d_global, p_local):
+	"Atualiza os feromonios em cada ponto"
+	delta = 1 - (d_local - d_global) / (p_local - d_global)
+	for i in range(len(feromonios)):
+		if i in m_local and i in m_global:
+			feromonios[i] += taxa * (delta - feromonios[i])
+		else:
+			feromonios[i] -= taxa * feromonios[i]
